@@ -32,6 +32,23 @@ const ListStores = () => {
     getLocation();
   }, []);
 
+  const fetchDistanceMatrix = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/api/distance-matrix",
+        {
+          origins: [[location.longitude, location.latitude]],
+          destinations: [[74.006, 40.7128]],
+        }
+      );
+      console.log("Distance Matrix:", response.data);
+    } catch (error) {
+      console.error("Error fetching distance matrix:", locationError);
+    }
+  };
+
+  //   fetchDistanceMatrix();
+
   const [value, loading, error] = useCollection(
     collection(firestore, "stores")
   );
@@ -54,7 +71,7 @@ const ListStores = () => {
     setIsEditing(false);
   };
 
-  const role = useRecoilValue(userRole)
+  const role = useRecoilValue(userRole);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
