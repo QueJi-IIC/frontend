@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const ListStores = () => {
-
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const [locationError, setLocationError] = useState(null);
 
@@ -27,31 +26,26 @@ const ListStores = () => {
       setLocationError("Geolocation is not supported by this browser.");
     }
   };
-  useEffect(()=>{getLocation();},[])
+  useEffect(() => {
+    getLocation();
+  }, []);
 
-  const fetchDistanceMatrix = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5500/api/distance-matrix",
-        {
-          origins: [[location.longitude, location.latitude]], 
-          destinations: [[74.006, 40.7128]],
-        }
-      );
-      console.log("Distance Matrix:", response.data);
-    } catch (error) {
-      console.error("Error fetching distance matrix:", locationError);
-    }
-  };
-
-  //   fetchDistanceMatrix();
-
-
-  const [value, loading, error] = useCollection(collection(firestore, "stores"));
+  const [value, loading, error] = useCollection(
+    collection(firestore, "stores")
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [locality, setLocality] = useState("Jaipur");
 
-  const cities = ["Jaipur", "Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"];
+  const cities = [
+    "Jaipur",
+    "Delhi",
+    "Mumbai",
+    "Bangalore",
+    "Chennai",
+    "Kolkata",
+    "Hyderabad",
+    "Pune",
+  ];
 
   const handleLocalityChange = (e) => {
     setLocality(e.target.value);
