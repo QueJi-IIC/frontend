@@ -51,12 +51,13 @@ const JoinQueue = () => {
   const fetchDistanceMatrix = async () => {
     setDistanceLoading(true);
     try {
-      console.log(
-        location.latitude,
-        location.longitude,
-        storeDoc.data().latitude,
-        storeDoc.data().longitude
-      );
+      console
+        .log
+        // location.latitude,
+        // location.longitude,
+        // storeDoc.data().latitude,
+        // storeDoc.data().longitude
+        ();
       const response = await axios.post(
         "http://localhost:5500/api/distance-matrix",
         {
@@ -130,10 +131,10 @@ const JoinQueue = () => {
           Join Virtual Queue
         </h2>
         <p className="text-center mb-4">Store: {storeDoc.data().name}</p>
-        {submitted && (
+        {distance && duration && (
           <>
-            <p className="text-center mb-4">Distance: {distance}</p>
-            <p className="text-center mb-4">Time: {duration}</p>
+            <p className="text-center mb-4">Distance(Kms): {distance / 1000}</p>
+            <p className="text-center mb-4">Time(minutes): {duration / 60}</p>
           </>
         )}
         <button
