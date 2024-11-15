@@ -137,6 +137,14 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/store/queue/:id"
+          element={
+            <PrivateRoute>
+              <></>
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </>
   );
