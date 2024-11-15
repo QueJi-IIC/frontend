@@ -16,12 +16,41 @@ const NewShop = () => {
     desc: "",
     created_by: "",
     area: "",
+    longitude: "",
+    latitude:""
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
   const [user] = useAuthState(auth);
+
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [locationError, setLocationError] = useState(null);
+
+  const getLocation = (e) => {
+    e.preventDefault()
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log(`Latitude:${latitude} , Longitude:${longitude}`)
+          setLocation({ latitude, longitude });
+          setFormData({
+            ...formData,
+            "latitude": latitude,
+            "longitude": longitude
+          });
+        },
+        (err) => {
+          setLocationError(err.message);
+        }
+      );
+    } else {
+      setLocationError("Geolocation is not supported by this browser.");
+    }
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +67,8 @@ const NewShop = () => {
     if (!formData.name) newErrors.name = "Shop name is required";
     if (!formData.desc) newErrors.desc = "Description is required";
     if (!formData.area) newErrors.area = "Area is required";
+    if (!formData.latitude) newErrors.area = "Latitude is required";
+    if (!formData.longitude) newErrors.area = "Longitude is required";
     return newErrors;
   };
 
@@ -50,7 +81,7 @@ const NewShop = () => {
     }
     setLoading(true);
     try {
-      await addStore(setError, formData.capacity, formData.tracking_object, formData.name, formData.desc, user.uid, formData.area);
+      await addStore(setError, formData.capacity, formData.tracking_object, formData.name, formData.desc, user.uid, formData.area , formData.latitude , formData.longitude);
       setFormData({
         capacity: "",
         tracking_object: "",
@@ -58,6 +89,8 @@ const NewShop = () => {
         desc: "",
         created_by: "",
         area: "",
+        latitude:"",
+        longitude:""
       });
       setSubmitted(true);
       setError({});
@@ -160,22 +193,50 @@ const NewShop = () => {
               value={formData.area}
               onChange={handleChange}
               className="w-full p-2 rounded bg-gray-800 text-white"
-            />
+              />
             {error.area && <p className="text-red-500 text-sm">{error.area}</p>}
+            </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Latitude
+            </label>
+            <input
+              type="text"
+              name="latitude"
+              value={formData.latitude}
+              onChange={handleChange}
+              className="w-full p-2 rounded bg-gray-800 text-white"
+            />
+            {error.latitude && <p className="text-red-500 text-sm">{error.desc}</p>}
           </div>
-          <button
-            type="submit"
-            className="w-full p-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold"
-            disabled={loading}
-          >
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Longitude
+            </label>
+            <input
+              type="text"
+              name="longitude"
+              value={formData.longitude}
+              onChange={handleChange}
+              className="w-full p-2 rounded bg-gray-800 text-white"
+            />
+            {error.longitude && <p className="text-red-500 text-sm">{error.desc}</p>}
+          </div>
+          <div className=" relative z-10 mb-2 w-full max-w-md text-white font-bold py-2 px-4 rounded text-center">
+        <h1>User Location</h1>
+        <button className="bg bg-blue-600" onClick={getLocation}>Give Location Access </button>
+        { locationError && <p>{`Error: ${locationError}`}</p>}
+        <button type="submit" className="w-full m-3 p-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold" disabled={loading}>
+
             {loading ? (
               <ClipLoader size={20} color={"#ffffff"} loading={true} />
             ) : (
               "Submit"
             )}
-          </button>
+            </button>
+          </div>
         </form>
-      </div>
+    </div>
     </div>
   );
 };

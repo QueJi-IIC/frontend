@@ -5,22 +5,6 @@ import Background from "../components/background";
 import axios from "axios";
 
 const Home = () => {
-  const fetchDistanceMatrix = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5500/api/distance-matrix",
-        {
-          origins: [[78.9629, 20.5937]], // Example coordinates
-          destinations: [[74.006, 40.7128]],
-        }
-      );
-      console.log("Distance Matrix:", response.data);
-    } catch (error) {
-      console.error("Error fetching distance matrix:", error);
-    }
-  };
-
-  //   fetchDistanceMatrix();
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">

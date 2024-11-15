@@ -7,7 +7,9 @@ const getStoreData = (
   name,
   desc,
   created_by,
-  area
+  area,
+  latitude,
+  longitude
 ) => {
   return {
     capacity,
@@ -16,6 +18,8 @@ const getStoreData = (
     desc,
     created_by,
     area,
+    latitude,
+    longitude
   };
 };
 
@@ -28,7 +32,9 @@ const addStore = async (
   name,
   desc,
   created_by,
-  area
+  area,
+  latitude,
+  longitude
 ) => {
   try {
     // Create a new document reference with an auto-generated ID
@@ -37,7 +43,7 @@ const addStore = async (
     // Set the document data
     await setDoc(
       newStoreRef,
-      getStoreData(capacity, tracking_object, name, desc, created_by, area)
+      getStoreData(capacity, tracking_object, name, desc, created_by, area , latitude , longitude)
     );
 
     // Optionally, you can clear the error if the operation is successful

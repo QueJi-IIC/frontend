@@ -5,8 +5,49 @@ import { collection } from "firebase/firestore";
 import { firestore } from "../configs/firebase";
 import { ClipLoader } from "react-spinners";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const ListStores = () => {
+
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [locationError, setLocationError] = useState(null);
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ latitude, longitude });
+        },
+        (err) => {
+          setLocationError(err.message);
+        }
+      );
+    } else {
+      setLocationError("Geolocation is not supported by this browser.");
+    }
+  };
+
+
+  const fetchDistanceMatrix = async () => {
+    try {
+      getLocation();
+      const response = await axios.post(
+        "http://localhost:5500/api/distance-matrix",
+        {
+          origins: [[location.longitude, location.latitude]], 
+          destinations: [[74.006, 40.7128]],
+        }
+      );
+      console.log("Distance Matrix:", response.data);
+    } catch (error) {
+      console.error("Error fetching distance matrix:", locationError);
+    }
+  };
+
+  //   fetchDistanceMatrix();
+
+
   const [value, loading, error] = useCollection(collection(firestore, "stores"));
   const [isEditing, setIsEditing] = useState(false);
   const [locality, setLocality] = useState("Jaipur");
