@@ -96,6 +96,7 @@ const App = () => {
           extraHeaders: {
             platform: "web",
             authorization: `${token}`,
+            role: `${role}`
           },
         });
 
@@ -107,6 +108,10 @@ const App = () => {
         socket.on("disconnect", () => {
           console.log("Disconnected from WebSocket server");
         });
+
+        socket.on("sos", (e) => {
+          toast.error(e)
+        })
 
         socket.on("connect_error", (error) => {
           console.error("WebSocket error:", error);

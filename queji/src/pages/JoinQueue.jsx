@@ -88,8 +88,8 @@ const JoinQueue = () => {
       setErrors({});
     } catch (error) {
       console.error("Error joining queue: ", error);
-      if (error === "User is already in the queue for this store") {
-        setErrors({ submit: error });
+      if (error.message === "User is already in the queue for this store") {
+        setErrors({ submit: error.message });
       } else {
         setErrors({ submit: "Failed to join queue. Please try again." });
       }

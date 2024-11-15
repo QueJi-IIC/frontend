@@ -40,8 +40,8 @@ const addToQueue = async (user_id, user_name, store_id, store_name) => {
     console.log("User added to queue successfully");
   } catch (error) {
     console.error("Error adding user to queue: ", error);
-    if (error === "User is already in the queue for this store") {
-      throw new Error(error);
+    if (error.message === "User is already in the queue for this store") {
+      throw new Error("User is already in the queue for this store");
     } else {
       throw new Error("Error adding user to queue");
     }
