@@ -40,6 +40,7 @@ const JoinQueue = () => {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [distanceLoading, setDistanceLoading] = useState(false);
 
   // Fetch the store details using the store_id
   const storeRef = doc(firestore, "stores", store_id);
@@ -48,6 +49,7 @@ const JoinQueue = () => {
   const [duration, setDuration] = useState("");
 
   const fetchDistanceMatrix = async () => {
+    setDistanceLoading(true);
     try {
       console.log(
         location.latitude,
@@ -58,26 +60,25 @@ const JoinQueue = () => {
       const response = await axios.post(
         "http://localhost:5500/api/distance-matrix",
         {
-          // origins: [[location.longitude, location.latitude]],
-          // destinations: [[storeDoc.data().longitude, storeDoc.data().latitude]],
           origins: [[location.longitude, location.latitude]],
           destinations: [[storeDoc.data().longitude, storeDoc.data().latitude]],
         }
       );
       console.log("Distance Matrix:", response.data);
-      // setMapDetails(response.data)
       setDistance(response.data.distances);
       setDuration(response.data.durations);
     } catch (error) {
       console.error("Error fetching distance matrix:", error);
+    } finally {
+      setDistanceLoading(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    fetchDistanceMatrix();
     setLoading(true);
     try {
+      await fetchDistanceMatrix();
       await addToQueue(
         user.uid,
         user.displayName,
@@ -129,20 +130,24 @@ const JoinQueue = () => {
           Join Virtual Queue
         </h2>
         <p className="text-center mb-4">Store: {storeDoc.data().name}</p>
-        <p className="text-center mb-4">Distance: {distance}</p>
-        <p className="text-center mb-4">Time: {duration}</p>
+        {submitted && (
+          <>
+            <p className="text-center mb-4">Distance: {distance}</p>
+            <p className="text-center mb-4">Time: {duration}</p>
+          </>
+        )}
         <button
           onClick={handleSubmit}
           className="w-full p-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold"
-          disabled={loading}
+          disabled={loading || distanceLoading}
         >
-          {loading ? (
+          {loading || distanceLoading ? (
             <ClipLoader size={20} color={"#ffffff"} loading={true} />
           ) : (
             "Enter the waitlist"
           )}
         </button>
-        {submitted && (
+        {submitted && distance !== 0 && (
           <div className="text-green-500 mt-4 text-center">
             Successfully joined the queue. You will receive an email soon!
           </div>

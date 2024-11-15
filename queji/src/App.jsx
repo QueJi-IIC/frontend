@@ -90,7 +90,7 @@ const App = () => {
   useEffect(() => {
     let socket;
     const sRoles = ["admin", "store_owner", "customer"] 
-    if (user && sRoles.includes(role)) {
+    if (!socket && user && sRoles.includes(role)) {
       user.getIdToken().then((token) => {
         socket = io("http://localhost:5500", {
           extraHeaders: {
