@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import ListStores from "./pages/ListStores";
 import Login from "./pages/Login";
 import MyStores from "./pages/MyStores";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./configs/firebase";
 
 const App = () => {
   function Header() {
