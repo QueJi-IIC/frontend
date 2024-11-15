@@ -9,9 +9,9 @@ import { Link } from "react-router-dom";
 const ListStores = () => {
   const [value, loading, error] = useCollection(collection(firestore, "stores"));
   const [isEditing, setIsEditing] = useState(false);
-  const [locality, setLocality] = useState("Patiala");
+  const [locality, setLocality] = useState("Jaipur");
 
-  const cities = ["Patiala", "Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"];
+  const cities = ["Jaipur", "Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"];
 
   const handleLocalityChange = (e) => {
     setLocality(e.target.value);

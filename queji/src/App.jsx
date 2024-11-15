@@ -5,6 +5,7 @@ import Business from "./pages/Business";
 import Home from "./pages/Home";
 import ListStores from "./pages/ListStores";
 import Login from "./pages/Login";
+import MyStores from "./pages/MyStores";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/business-auth" element={<Business />} />
         <Route path="/login" element={<Login />} />
         <Route path="/stores" element={<ListStores />} />
+        <Route path="/stores/my" element={<MyStores />} />
       </Routes>
     </>
   );
