@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Customer from "./pages/Customer";
 import Business from "./pages/Business";
@@ -14,6 +14,9 @@ import JoinQueue from "./pages/JoinQueue";
 import StoreConsole from "./pages/StoreConsole";
 import GetHardwareCredentials from "./pages/GetHardwareCredentials";
 import { signOut } from "firebase/auth";
+import { useRecoilState } from "recoil";
+import { userRole } from "./configs/recoil";
+import { rbac } from "./data/rbac";
 
 const App = () => {
   function Loading() {
@@ -24,8 +27,15 @@ const App = () => {
     );
   }
 
+  const [user, loading] = useAuthState(auth);
+  const [role, setRole] = useRecoilState(userRole)
+
+  useEffect(() => {
+    if (!loading && user) setRole(rbac[user.email] ||"customer"
+    );
+  }, [user])
+
   function PrivateRoute({ children }) {
-    const [user, loading] = useAuthState(auth);
 
     if (loading) {
       // Show a loading indicator
@@ -42,7 +52,6 @@ const App = () => {
   }
 
   function PublicRoute({ children }) {
-    const [user, loading] = useAuthState(auth);
 
     if (loading) {
       // Show a loading indicator

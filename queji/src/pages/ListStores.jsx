@@ -6,6 +6,8 @@ import { firestore } from "../configs/firebase";
 import { ClipLoader } from "react-spinners";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { userRole } from "../configs/recoil";
 
 const ListStores = () => {
 
@@ -58,6 +60,8 @@ const ListStores = () => {
     setIsEditing(false);
   };
 
+  const role = useRecoilValue(userRole)
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
       <Background />
@@ -85,12 +89,14 @@ const ListStores = () => {
             </button>
           )}
         </div>
-        <Link
-          to="/stores/my"
-          className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
-        >
-          My Stores
-        </Link>
+        {role !== "customer" && (
+          <Link
+            to="/stores/my"
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
+          >
+            My Stores
+          </Link>
+        )}
       </div>
       <div className="mt-6 relative z-10 text-center">
         <h1 className="text-4xl font-bold">All Stores</h1>
