@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Customer from "./pages/Customer";
 import Business from "./pages/Business";
 import Home from "./pages/Home";
@@ -10,6 +10,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./configs/firebase";
 import NewShop from "./pages/NewStore";
 import { ClipLoader } from "react-spinners";
+import JoinQueue from "./pages/JoinQueue";
+import StoreConsole from "./pages/StoreConsole";
 
 const App = () => {
   function Loading() {
@@ -141,7 +143,15 @@ const App = () => {
           path="/store/queue/:id"
           element={
             <PrivateRoute>
-              <></>
+              <JoinQueue />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/store/:id"
+          element={
+            <PrivateRoute>
+              <StoreConsole />
             </PrivateRoute>
           }
         />
