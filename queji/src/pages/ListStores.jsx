@@ -78,8 +78,8 @@ const ListStores = () => {
       <Background />
       <div className="bg-black relative z-10 p-6 rounded-lg shadow-lg w-fit mx-auto mt-6 flex items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-4xl font-bold">Current Locality:</h1>
-          {isEditing ? (
+          <h1 className="text-4xl font-bold">| DLF Mall of India | </h1>
+          {/* {isEditing ? (
             <select
               value={locality}
               onChange={handleLocalityChange}
@@ -98,7 +98,7 @@ const ListStores = () => {
             >
               {locality}
             </button>
-          )}
+          )} */}
         </div>
         {role !== "customer" && (
           <Link

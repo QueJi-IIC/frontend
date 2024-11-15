@@ -48,8 +48,8 @@ const MyStores = () => {
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center">
       <Background />
       <div className="bg-black relative z-10 p-6 rounded-lg shadow-lg w-fit mx-auto mt-6 flex items-center justify-start">
-        <h1 className="text-4xl font-bold">Current Locality:</h1>
-        {showSelect ? (
+        <h1 className="text-4xl font-bold">| DLF Mall of India | </h1>
+        {/* {showSelect ? (
           <select
             value={locality}
             onChange={handleLocalityChange}
@@ -68,7 +68,7 @@ const MyStores = () => {
           >
             {locality}
           </button>
-        )}
+        )} */}
         <Link
           to="/stores"
           className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
