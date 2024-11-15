@@ -13,6 +13,7 @@ import { ClipLoader } from "react-spinners";
 import JoinQueue from "./pages/JoinQueue";
 import StoreConsole from "./pages/StoreConsole";
 import GetHardwareCredentials from "./pages/GetHardwareCredentials";
+import { signOut } from "firebase/auth";
 
 const App = () => {
   function Loading() {
