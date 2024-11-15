@@ -17,6 +17,8 @@ import { signOut } from "firebase/auth";
 import { useRecoilState } from "recoil";
 import { userRole } from "./configs/recoil";
 import { rbac } from "./data/rbac";
+import { io } from "socket.io-client";
+import { toast } from "react-toastify";
 
 const App = () => {
   function Loading() {
@@ -28,15 +30,13 @@ const App = () => {
   }
 
   const [user, loading] = useAuthState(auth);
-  const [role, setRole] = useRecoilState(userRole)
+  const [role, setRole] = useRecoilState(userRole);
 
   useEffect(() => {
-    if (!loading && user) setRole(rbac[user.email] ||"customer"
-    );
-  }, [user])
+    if (!loading && user) setRole(rbac[user.email] || "customer");
+  }, [loading, user, role]);
 
   function PrivateRoute({ children }) {
-
     if (loading) {
       // Show a loading indicator
       return <Loading />;
@@ -52,7 +52,6 @@ const App = () => {
   }
 
   function PublicRoute({ children }) {
-
     if (loading) {
       // Show a loading indicator
       return <Loading />;
@@ -68,25 +67,59 @@ const App = () => {
   }
 
   function Header() {
-  const [user] = useAuthState(auth);
+    const [user] = useAuthState(auth);
 
-  const handleLogout = () => {
-    signOut(auth);
-  };
+    const handleLogout = () => {
+      signOut(auth);
+    };
 
-  return (
-    <div className="fixed z-50 top-0 right-0 p-4">
-      {user && (
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
-      )}
-    </div>
-  );
-}
+    return (
+      <div className="fixed z-50 top-0 right-0 p-4">
+        {user && (
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded"
+          >
+            Logout
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    let socket;
+    const sRoles = ["admin", "store_owner", "customer"] 
+    if (user && sRoles.includes(role)) {
+      user.getIdToken().then((token) => {
+        socket = io("http://localhost:5500", {
+          extraHeaders: {
+            platform: "web",
+            authorization: `${token}`,
+          },
+        });
+
+        socket.on("connect", () => {
+          toast("Connected to realtime event server!!")
+          console.log("Connected to WebSocket server");
+        });
+
+        socket.on("disconnect", () => {
+          console.log("Disconnected from WebSocket server");
+        });
+
+        socket.on("connect_error", (error) => {
+          console.error("WebSocket error:", error);
+        });
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, [user, role]);
   return (
     <>
       <Header />

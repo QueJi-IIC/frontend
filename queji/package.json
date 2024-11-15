@@ -20,7 +20,10 @@
     "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.28.0",
     "react-spinners": "^0.14.1",
-    "recoil": "^0.7.7"
+    "react-toastify": "^10.0.6",
+    "react-use-websocket": "^4.10.1",
+    "recoil": "^0.7.7",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
