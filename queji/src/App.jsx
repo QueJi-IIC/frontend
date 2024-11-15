@@ -12,6 +12,7 @@ import NewShop from "./pages/NewStore";
 import { ClipLoader } from "react-spinners";
 import JoinQueue from "./pages/JoinQueue";
 import StoreConsole from "./pages/StoreConsole";
+import GetHardwareCredentials from "./pages/GetHardwareCredentials";
 
 const App = () => {
   function Loading() {
@@ -152,6 +153,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <StoreConsole />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/hardware/add/:id"
+          element={
+            <PrivateRoute>
+              <GetHardwareCredentials />
             </PrivateRoute>
           }
         />
