@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Background from "../components/background";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
@@ -12,7 +12,7 @@ const ListStores = () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const [locationError, setLocationError] = useState(null);
 
-  const getLocation = () => {
+  const getLocation = (e) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -27,11 +27,10 @@ const ListStores = () => {
       setLocationError("Geolocation is not supported by this browser.");
     }
   };
-
+  useEffect(()=>{getLocation();},[])
 
   const fetchDistanceMatrix = async () => {
     try {
-      getLocation();
       const response = await axios.post(
         "http://localhost:5500/api/distance-matrix",
         {

@@ -222,11 +222,11 @@ const NewShop = () => {
             />
             {error.longitude && <p className="text-red-500 text-sm">{error.desc}</p>}
           </div>
-          <div className=" relative z-10 mb-2 w-full max-w-md text-white font-bold py-2 px-4 rounded text-center">
+          <div className=" relative z-10 w-full max-w-md text-white font-bold py-2 px-4 rounded text-center">
         <h1>User Location</h1>
-        <button className="bg bg-blue-600" onClick={getLocation}>Give Location Access </button>
+        <button className="bg bg-blue-600 mb-3" onClick={getLocation}>Give Location Access </button>
         { locationError && <p>{`Error: ${locationError}`}</p>}
-        <button type="submit" className="w-full m-3 p-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold" disabled={loading}>
+        <button type="submit" className="w-full p-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold" disabled={loading}>
 
             {loading ? (
               <ClipLoader size={20} color={"#ffffff"} loading={true} />
