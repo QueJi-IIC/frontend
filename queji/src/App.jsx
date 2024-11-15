@@ -1,12 +1,15 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Test from "./components/Test";
+import Customer from "./pages/Customer";
+import Business from "./pages/Business";
 
 const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Test />} />
+        <Route path="/" element={<Customer />} />
+        <Route path="/customer-auth" element={<Customer />} />
+        <Route path="/business-auth" element={<Business />} />
       </Routes>
     </>
   );
