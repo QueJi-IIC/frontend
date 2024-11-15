@@ -9,8 +9,51 @@ import MyStores from "./pages/MyStores";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./configs/firebase";
 import NewShop from "./pages/NewStore";
+import { ClipLoader } from "react-spinners";
 
 const App = () => {
+  function Loading() {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+        <ClipLoader size={50} color={"#ffffff"} loading={true} />
+      </div>
+    );
+  }
+
+  function PrivateRoute({ children }) {
+    const [user, loading] = useAuthState(auth);
+
+    if (loading) {
+      // Show a loading indicator
+      return <Loading />;
+    }
+
+    if (!user) {
+      // Redirect to login if not authenticated
+      return <Navigate to="/" />;
+    }
+
+    // Render the protected component
+    return children;
+  }
+
+  function PublicRoute({ children }) {
+    const [user, loading] = useAuthState(auth);
+
+    if (loading) {
+      // Show a loading indicator
+      return <Loading />;
+    }
+
+    if (user) {
+      // Redirect to store if already authenticated
+      return <Navigate to="/stores" />;
+    }
+
+    // Render the public component
+    return children;
+  }
+
   function Header() {
   const [user] = useAuthState(auth);
 
@@ -33,20 +76,67 @@ const App = () => {
 }
   return (
     <>
-    <Header />
+      <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/customer-auth" element={<Customer />} />
-        <Route path="/business-auth" element={<Business />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/stores" element={<ListStores />} />
-        <Route path="/stores/my" element={<MyStores />} />
+        {/* Public routes */}
         <Route
-            path="/store/new"
-            element={
-                <NewShop />
-            }
-          />
+          path="/"
+          element={
+            <PublicRoute>
+              <Home />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/customer-auth"
+          element={
+            <PublicRoute>
+              <Customer />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/business-auth"
+          element={
+            <PublicRoute>
+              <Business />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+
+        {/* Private routes */}
+        <Route
+          path="/stores"
+          element={
+            <PrivateRoute>
+              <ListStores />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/stores/my"
+          element={
+            <PrivateRoute>
+              <MyStores />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/store/new"
+          element={
+            <PrivateRoute>
+              <NewShop />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </>
   );
