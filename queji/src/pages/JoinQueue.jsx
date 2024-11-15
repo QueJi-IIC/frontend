@@ -44,6 +44,8 @@ const JoinQueue = () => {
   // Fetch the store details using the store_id
   const storeRef = doc(firestore, "stores", store_id);
   const [storeDoc, storeLoading, storeError] = useDocument(storeRef);
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
 
   const fetchDistanceMatrix = async () => {
     try {
@@ -63,6 +65,9 @@ const JoinQueue = () => {
         }
       );
       console.log("Distance Matrix:", response.data);
+      // setMapDetails(response.data)
+      setDistance(response.data.distances);
+      setDuration(response.data.durations);
     } catch (error) {
       console.error("Error fetching distance matrix:", error);
     }
@@ -124,8 +129,8 @@ const JoinQueue = () => {
           Join Virtual Queue
         </h2>
         <p className="text-center mb-4">Store: {storeDoc.data().name}</p>
-        <p className="text-center mb-4">Distance: {storeDoc.data().name}</p>
-        <p className="text-center mb-4">Time: {storeDoc.data().name}</p>
+        <p className="text-center mb-4">Distance: {distance}</p>
+        <p className="text-center mb-4">Time: {duration}</p>
         <button
           onClick={handleSubmit}
           className="w-full p-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold"
