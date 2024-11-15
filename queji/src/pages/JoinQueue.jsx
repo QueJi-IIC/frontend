@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Background from "../components/background";
 import { addToQueue } from "../data/queue";
@@ -6,11 +6,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestore } from "../configs/firebase";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
+import axios from "axios";
 import { ClipLoader } from "react-spinners";
 
 const JoinQueue = () => {
-
-  
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const [locationError, setLocationError] = useState(null);
 
@@ -24,15 +23,17 @@ const JoinQueue = () => {
         (err) => {
           setLocationError(err.message);
         }
-      )
+      );
     } else {
       setLocationError("Geolocation is not supported by this browser.");
     }
   };
-  useEffect(()=>{getLocation();},[])
-
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   const navigate = useNavigate();
+
   const { id: store_id } = useParams();
   const [user] = useAuthState(auth);
 
@@ -44,11 +45,40 @@ const JoinQueue = () => {
   const storeRef = doc(firestore, "stores", store_id);
   const [storeDoc, storeLoading, storeError] = useDocument(storeRef);
 
+  const fetchDistanceMatrix = async () => {
+    try {
+      console.log(
+        location.latitude,
+        location.longitude,
+        storeDoc.data().latitude,
+        storeDoc.data().longitude
+      );
+      const response = await axios.post(
+        "http://localhost:5500/api/distance-matrix",
+        {
+          // origins: [[location.longitude, location.latitude]],
+          // destinations: [[storeDoc.data().longitude, storeDoc.data().latitude]],
+          origins: [[location.longitude, location.latitude]],
+          destinations: [[storeDoc.data().longitude, storeDoc.data().latitude]],
+        }
+      );
+      console.log("Distance Matrix:", response.data);
+    } catch (error) {
+      console.error("Error fetching distance matrix:", error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    fetchDistanceMatrix();
     setLoading(true);
     try {
-      await addToQueue(user.uid, user.displayName, store_id, storeDoc.data().name);
+      await addToQueue(
+        user.uid,
+        user.displayName,
+        store_id,
+        storeDoc.data().name
+      );
       setSubmitted(true);
       setErrors({});
     } catch (error) {
@@ -94,6 +124,8 @@ const JoinQueue = () => {
           Join Virtual Queue
         </h2>
         <p className="text-center mb-4">Store: {storeDoc.data().name}</p>
+        <p className="text-center mb-4">Distance: {storeDoc.data().name}</p>
+        <p className="text-center mb-4">Time: {storeDoc.data().name}</p>
         <button
           onClick={handleSubmit}
           className="w-full p-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold"
