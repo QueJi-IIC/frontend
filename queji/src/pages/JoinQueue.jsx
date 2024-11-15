@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Background from "../components/background";
 import { addToQueue } from "../data/queue";
@@ -9,6 +9,29 @@ import { doc } from "firebase/firestore";
 import { ClipLoader } from "react-spinners";
 
 const JoinQueue = () => {
+
+  
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [locationError, setLocationError] = useState(null);
+
+  const getLocation = (e) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ latitude, longitude });
+        },
+        (err) => {
+          setLocationError(err.message);
+        }
+      )
+    } else {
+      setLocationError("Geolocation is not supported by this browser.");
+    }
+  };
+  useEffect(()=>{getLocation();},[])
+
+
   const navigate = useNavigate();
   const { id: store_id } = useParams();
   const [user] = useAuthState(auth);
