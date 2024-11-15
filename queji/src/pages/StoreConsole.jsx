@@ -31,6 +31,8 @@ const StoreConsole = () => {
     }
   }, [storeLoading, storeDoc, user, navigate]);
 
+  const statusRef = doc(firestore, "status", id);
+  const [statusDoc, statusLoading, statusError] = useDocument(statusRef);
   const handleDelete = async (queueId) => {
     try {
       await deleteDoc(doc(firestore, "queue", queueId));
@@ -40,7 +42,7 @@ const StoreConsole = () => {
     }
   };
 
-  if (storeLoading || queueLoading) {
+  if (storeLoading || queueLoading || statusLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
         <ClipLoader size={50} color={"#ffffff"} loading={true} />
@@ -48,7 +50,7 @@ const StoreConsole = () => {
     );
   }
 
-  if (storeError || queueError) {
+  if (storeError || queueError || statusError) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
         <p>Error loading data: {storeError?.message || queueError?.message}</p>
@@ -71,6 +73,9 @@ const StoreConsole = () => {
         </h1>
         <h2 className="text-2xl font-bold text-center">
           People in virtual queue: {queueValue?.docs.length}
+        </h2>
+        <h2 className="text-2xl font-bold text-center">
+          People in virtual queue: {statusDoc?.data().status.People}
         </h2>
       </div>
       <div className="bg-black relative z-10 border p-8 rounded-lg shadow-lg w-full max-w-md mt-6">
